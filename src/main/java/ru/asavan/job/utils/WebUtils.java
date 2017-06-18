@@ -1,18 +1,14 @@
 package ru.asavan.job.utils;
 
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -43,86 +39,8 @@ public class WebUtils {
     private static final String REFERER_HEADER = "Referer";
     private static final String BOT_USER_AGENT = "Mozilla/5.0";
 
-    private static Logger log = Logger.getLogger(WebUtils.class);
+    private static final Logger log = Logger.getLogger(WebUtils.class);
 
-
-
-    public static String createUrl(String existingUrl, Map<String, String> additionalParams, boolean overrideWithAdditional) {
-        String[] href = existingUrl.split("\\?");
-        String page = href[0];
-        Map<String, String> allParams = new HashMap<String, String>(additionalParams);
-        if (href.length == 2) {
-            String query = href[1];
-            String[] params = query.split("&");
-            for (String param : params) {
-                String[] keyValue = param.split("=");
-                if (keyValue.length >= 2) {
-                    if (!overrideWithAdditional || allParams.get(keyValue[0]) == null) {
-                        try {
-                            allParams.put(keyValue[0], URLDecoder.decode(keyValue[1], "UTF-8"));
-                        } catch (UnsupportedEncodingException e) {
-                            log.warn("Error while decoding params: " + keyValue[1]);
-                        }
-                    }
-                } else {
-                    log.error("Can't split request param " + param);
-                }
-            }
-        }
-        String params = tryUrlEncodeMap(allParams, "UTF-8");
-        params = StringUtils.isBlank(params) ? "" : "?" + params;
-        return page + params;
-    }
-
-    public static boolean isIos(HttpServletRequest request) {
-        String ua = request.getHeader(UA_HEADER);
-        return !(StringUtils.isEmpty(ua) || StringUtils.length(ua) < 4) && UA_IOS.matcher(ua).matches();
-    }
-
-    /**
-     * Serializes request to string
-     *
-     * @return http request data
-     */
-    public static String requestDataToString(HttpServletRequest request) {
-        if (request == null) {
-            return "";
-        }
-        StringBuilder errors = new StringBuilder();
-
-        try {
-            // Appending request url
-            errors.append(request.getMethod());
-            errors.append(" ");
-            errors.append(request.getScheme());
-            errors.append("://");
-            errors.append(request.getHeader("Host"));
-            errors.append(request.getRequestURI());
-            String query = request.getQueryString();
-            if (!StringUtils.isEmpty(query)) {
-                errors.append("?");
-                errors.append(query);
-            }
-            errors.append("\n");
-
-            Enumeration headerNames = request.getHeaderNames();
-
-            while (headerNames.hasMoreElements()) {
-
-                String headerName = headerNames.nextElement().toString();
-                errors.append(headerName);
-                errors.append(": ");
-                String headerValue = request.getHeader(headerName);
-                errors.append(headerValue);
-                errors.append("\n");
-            }
-            addParamsToSb(errors, request);
-        } catch (Exception ex) {
-            log.warn(ex);
-        }
-
-        return errors.toString();
-    }
 
     static private void addParamsToSb(StringBuilder sb, HttpServletRequest request) {
 
@@ -141,88 +59,6 @@ public class WebUtils {
     }
 
 
-
-    /*
-    Generates urlencoded POST data from key-value dictionary
-     */
-    private static String urlEncodeMap(Map<String, String> data, String encoding) throws UnsupportedEncodingException {
-        StringBuilder postData = new StringBuilder();
-        if (data == null) {
-            return StringUtils.EMPTY;
-        }
-        Iterator<Map.Entry<String, String>> it = data.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, String> pair = it.next();
-            if (pair.getValue() != null) {
-                postData.append(URLEncoder.encode(pair.getKey(), encoding));
-                postData.append("=");
-                postData.append(URLEncoder.encode(pair.getValue(), encoding));
-                if (it.hasNext()) {
-                    postData.append("&");
-                }
-            }
-        }
-        return postData.toString();
-    }
-
-    public static String tryUrlEncodeMap(String encoding, String... params) {
-        Map<String, String> map = new HashMap<>();
-        for (int i = 0; i < params.length; i += 2) {
-            map.put(params[i], params[i + 1]);
-        }
-        return tryUrlEncodeMap(map, encoding);
-
-    }
-
-    public static String tryUrlEncodeMap(Map<String, String> data, String encoding) {
-        String result;
-        try {
-            result = urlEncodeMap(data, encoding);
-        } catch (UnsupportedEncodingException e) {
-            Logger.getLogger(WebUtils.class).error("Error encoding", e);
-
-            StringBuilder sb = new StringBuilder();
-            Iterator<Map.Entry<String, String>> it = data.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry<String, String> param = it.next();
-                if (param.getValue() != null) {
-                    sb.append(String.format("%s=%s", param.getKey(), param.getValue()));
-                    if (it.hasNext()) {
-                        sb.append("&");
-                    }
-                }
-            }
-            result = sb.toString();
-        }
-
-        return result;
-    }
-
-
-
-    /**
-     * Extracts host from the url
-     *
-     * @param url url
-     * @return host name
-     */
-    public static String getHost(String url) {
-        if (StringUtils.isEmpty(url)) {
-            return StringUtils.EMPTY;
-        }
-        int beginIndex = url.indexOf("://");
-        if (beginIndex < 4) {
-            return StringUtils.EMPTY;
-        }
-        beginIndex += 3;
-        int endIndex = url.indexOf('/', beginIndex);
-        if (endIndex < 0) {
-            return url.substring(beginIndex);
-        }
-        return url.substring(beginIndex, endIndex);
-    }
-
-
     /**
      * Checks if request is originated from Internet Explorer
      *
@@ -237,10 +73,6 @@ public class WebUtils {
             }
         }
         return false;
-    }
-
-    public static String removeJSessionFromUrl(String url) {
-        return StringUtils.substringBefore(url, ";jsessionid=");
     }
 
     /**
@@ -273,109 +105,6 @@ public class WebUtils {
 
     public static String getReferer(HttpServletRequest request) {
         return request.getHeader(REFERER_HEADER);
-    }
-
-    public static class Parameters {
-
-        private Map<String, String> params;
-
-        public Parameters() {
-            params = new HashMap<String, String>();
-        }
-
-        public Parameters(Map<String, String> params) {
-            if (params == null) {
-                throw new IllegalArgumentException("Argument 'params' could not be null.");
-            }
-            this.params = params;
-        }
-
-        public Parameters(Parameters params) {
-            if (params == null) {
-                throw new IllegalArgumentException("Argument 'params' could not be null.");
-            }
-            this.params = params.getParams();
-        }
-
-
-        public static Parameters parseServletRequest(ServletRequest request) {
-            Map<String, String> params = new HashMap<String, String>();
-
-            Enumeration names = request.getParameterNames();
-            while (names.hasMoreElements()) {
-                String name = names.nextElement().toString();
-                String value = request.getParameter(name);
-                params.put(name, value);
-            }
-
-            return new Parameters(params);
-        }
-
-        public Map<String, String> getParams() {
-            return params;
-        }
-
-        public Parameters getParams(String... paramNames) {
-            Parameters result = new Parameters();
-            for (String paramName : paramNames) {
-                if (has(paramName)) {
-                    result.add(paramName, get(paramName));
-                }
-            }
-
-            return result;
-        }
-
-        public Parameters add(String name, Object value) {
-            if (value != null) {
-                params.put(name, value.toString());
-            }
-            return this;
-        }
-
-        public Parameters add(String name, int value) {
-            return add(name, String.valueOf(value));
-        }
-
-        public Parameters add(String name, long value) {
-            return add(name, String.valueOf(value));
-        }
-
-        public Parameters add(Map.Entry<String, String> param) {
-            return (param != null) ? add(param.getKey(), param.getValue()) : this;
-        }
-
-        public Parameters addAll(Parameters params) {
-            getParams().putAll(params.getParams());
-            return this;
-        }
-
-        public boolean has(String paramName) {
-            return params.containsKey(paramName);
-        }
-
-        public String get(String paramName) {
-            String result = params.get(paramName);
-            return StringUtils.isEmpty(result) ? "" : result;
-        }
-
-        public String createUrl(String baseUrl, boolean overrideParamIfExists) {
-            return WebUtils.createUrl(baseUrl, getParams(), overrideParamIfExists);
-        }
-
-        public boolean isEmpty() {
-            return getParams().isEmpty();
-        }
-
-        @Override
-        public String toString() {
-            StringBuilder sb = new StringBuilder();
-            for (Map.Entry entry : params.entrySet()) {
-                sb.append(String.format("%s=%s%n", entry.getKey(), entry.getValue()));
-            }
-
-            return sb.toString();
-        }
     }
 
     public static Map<String, String> getQueryParams(String query, String enc) throws UnsupportedEncodingException {

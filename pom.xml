@@ -98,35 +98,6 @@
         </plugins> 
     </build>  
     <dependencies> 
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>  
-            <artifactId>jetty-util</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>  
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>  
-            <artifactId>jetty-servlet</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>${spring.version}</version>
-
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons.lang3.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>log4j</groupId>
@@ -167,19 +138,13 @@
             <artifactId>apache-jsp</artifactId>
             <version>${jetty.version}</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.eclipse.jetty/apache-jstl -->
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-plus</artifactId>
-            <version>9.3.8.v20160314</version>
+            <artifactId>apache-jstl</artifactId>
+            <version>${jetty.version}</version>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.apache.taglibs/taglibs-standard-impl -->
-        <dependency>
-            <groupId>org.apache.taglibs</groupId>
-            <artifactId>taglibs-standard-impl</artifactId>
-            <version>1.2.5</version>
-        </dependency>
-
 
     </dependencies>
 </project>
