@@ -2,9 +2,6 @@ package ru.asavan.job.framework;
 
 import java.util.Date;
 
-/**
- * Created by asavan on 11.11.2016.
- */
 public abstract class AbstractPrintableJob implements TimebleAndExecutable {
     private final LogableJob logableJob = new LogableJob();
 

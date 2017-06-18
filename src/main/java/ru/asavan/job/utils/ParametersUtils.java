@@ -8,10 +8,6 @@ public final class ParametersUtils {
     /**
      * Gets specified parameter value or defaultValue if not set
      *
-     * @param args
-     * @param parameterName
-     * @param defaultValue
-     * @return
      */
     public static String getParameter(String[] args, String parameterName, String defaultValue) {
         if (args == null || args.length == 0) {

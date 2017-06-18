@@ -1,7 +1,9 @@
 package ru.asavan.job.main;
 
 import org.apache.jasper.servlet.JspServlet;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.resource.Resource;
@@ -19,7 +21,7 @@ import java.net.URI;
  */
 public class JobStarter {
 
-    private static Logger log = Logger.getLogger(JobStarter.class);
+    private static Logger log = LogManager.getLogger(JobStarter.class);
     private static ClassPathXmlApplicationContext applicationContext;
     private static Server server;
 
@@ -47,7 +49,7 @@ public class JobStarter {
             ServletHolder servletHolder = new ServletHolder("default", servlet);
 
             WebAppContext webappcontext = new WebAppContext();
-            // webappcontext.setDescriptor("web.xml");
+            webappcontext.setDescriptor("web.xml");
             webappcontext.setContextPath("/");
 
             // webappcontext.setAttribute("org.eclipse.jetty.containerInitializers", initializers);
@@ -55,7 +57,7 @@ public class JobStarter {
 //            ClassLoader jspClassLoader = new URLClassLoader(new URL[0], JobStarter.class.getClassLoader());
 //            webappcontext.setClassLoader(jspClassLoader);
 
-            URI baseUri = JobStarter.class.getResource("/").toURI();
+            URI baseUri = JobStarter.class.getResource("/webapp").toURI();
             Resource webroot = Resource.newResource(baseUri);
             if (!webroot.exists())
             {

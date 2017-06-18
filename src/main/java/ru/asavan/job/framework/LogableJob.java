@@ -1,14 +1,11 @@
 package ru.asavan.job.framework;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.util.Date;
 
-/**
- *
- * Created by asavan on 11.11.2016.
- */
 final class LogableJob implements Timeble {
-    private static final Logger log = Logger.getLogger(LogableJob.class);
+    private static final Logger log = LogManager.getLogger(LogableJob.class);
     private final Object syncObj = new Object();
     private Date lastTimeStarted;
     private Date lastTimeFinished;
