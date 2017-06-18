@@ -87,7 +87,7 @@ public class JobServlet extends HttpServlet {
     private void showMain2(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setAttribute("jobs", jobsToShow);
         System.out.print(request.getContextPath());
-        RequestDispatcher rd = request.getRequestDispatcher("/job-grid.jsp");
+        RequestDispatcher rd = request.getRequestDispatcher("/webapp/job-grid.jsp");
         rd.forward(request, response);
     }
 

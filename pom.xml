@@ -173,5 +173,13 @@
             <version>9.3.8.v20160314</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.apache.taglibs/taglibs-standard-impl -->
+        <dependency>
+            <groupId>org.apache.taglibs</groupId>
+            <artifactId>taglibs-standard-impl</artifactId>
+            <version>1.2.5</version>
+        </dependency>
+
+
     </dependencies>
 </project>
