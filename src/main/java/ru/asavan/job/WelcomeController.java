@@ -81,5 +81,4 @@ public class WelcomeController {
 		}
 		resp.getWriter().flush();
 	}
-
 }

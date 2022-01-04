@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class CounterJob implements BaseJob {
     private static final long UPDATE_DELAY = 5 * 1000; // 5c
 
-    private AtomicInteger counter = new AtomicInteger();
+    private final AtomicInteger counter = new AtomicInteger();
 
     @Scheduled(fixedDelay = UPDATE_DELAY)
     public void scheduleRotate() {

@@ -8,8 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 public class SpringBootWebApplication {
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		SpringApplication.run(SpringBootWebApplication.class, args);
 	}
-
 }
